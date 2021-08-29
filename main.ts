@@ -154,13 +154,13 @@ function Cover () {
         tiles.placeOnTile(Covers, value)
         Covers.setFlag(SpriteFlag.GhostThroughTiles, true)
         Covers.setFlag(SpriteFlag.GhostThroughWalls, true)
-        Covers.setFlag(SpriteFlag.Invisible, false)
+        Covers.setFlag(SpriteFlag.Invisible, true)
         sprites.setDataNumber(Covers, "col", tiles.locationXY(value, tiles.XY.column))
         sprites.setDataNumber(Covers, "row", tiles.locationXY(value, tiles.XY.row))
     }
 }
 function Make_Bombs () {
-    for (let index = 0; index < 25; index++) {
+    for (let index = 0; index < 30; index++) {
         tiles.setTileAt(tiles.getTilesByType(assets.tile`myTile0`)._pickRandom(), assets.tile`myTile1`)
     }
     Makee_Numbers()
@@ -197,6 +197,10 @@ function Desto_Neighbour (num: number, num2: number) {
         Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Top), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Top), tiles.XY.row))
         Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Right), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Right), tiles.XY.row))
         Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Bottom), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Bottom), tiles.XY.row))
+        Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(tiles.locationInDirection(Lolac, CollisionDirection.Top), CollisionDirection.Left), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Left), tiles.XY.row))
+        Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(tiles.locationInDirection(Lolac, CollisionDirection.Bottom), CollisionDirection.Left), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Left), tiles.XY.row))
+        Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(tiles.locationInDirection(Lolac, CollisionDirection.Bottom), CollisionDirection.Right), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Left), tiles.XY.row))
+        Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(tiles.locationInDirection(Lolac, CollisionDirection.Top), CollisionDirection.Right), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Left), tiles.XY.row))
     }
 }
 let Lolac: tiles.Location = null
