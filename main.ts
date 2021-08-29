@@ -1,5 +1,6 @@
 namespace SpriteKind {
     export const Cursor = SpriteKind.create()
+    export const Flag = SpriteKind.create()
 }
 function Makee_Numbers () {
     for (let tile of tiles.getTilesByType(assets.tile`myTile0`)) {
@@ -103,7 +104,9 @@ function Makee_Numbers () {
         }
         if (Bombiers != 0) {
             Num = sprites.create(Numbers[Bombiers - 1], SpriteKind.Player)
+            Num.z = 7
             tiles.placeOnTile(Num, tile)
+            Num.setFlag(SpriteFlag.Ghost, true)
         }
     }
 }
@@ -111,6 +114,9 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (!(tiles.tileIsWall(tiles.locationInDirection(tiles.locationOfSprite(mySprite), CollisionDirection.Top)))) {
         tiles.placeOnTile(mySprite, tiles.locationInDirection(tiles.locationOfSprite(mySprite), CollisionDirection.Top))
     }
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+	
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     Desto_Neighbour(tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.column), tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.row))
@@ -144,7 +150,7 @@ function Cover () {
             9 9 9 9 9 9 9 8 
             8 8 8 8 8 8 8 8 
             `, SpriteKind.Food)
-        Covers.z = 9
+        Covers.z = 8
         tiles.placeOnTile(Covers, value)
         Covers.setFlag(SpriteFlag.GhostThroughTiles, true)
         Covers.setFlag(SpriteFlag.GhostThroughWalls, true)
@@ -154,7 +160,7 @@ function Cover () {
     }
 }
 function Make_Bombs () {
-    for (let index = 0; index < 10; index++) {
+    for (let index = 0; index < 25; index++) {
         tiles.setTileAt(tiles.getTilesByType(assets.tile`myTile0`)._pickRandom(), assets.tile`myTile1`)
     }
     Makee_Numbers()
