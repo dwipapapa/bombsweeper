@@ -110,13 +110,36 @@ function Makee_Numbers () {
         }
     }
 }
+function Desto_Flag (num: number, num2: number) {
+    for (let value of sprites.allOfKind(SpriteKind.Flag)) {
+        if (sprites.readDataNumber(value, "col") == num && sprites.readDataNumber(value, "row") == num2) {
+            value.destroy()
+        }
+    }
+}
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (!(tiles.tileIsWall(tiles.locationInDirection(tiles.locationOfSprite(mySprite), CollisionDirection.Top)))) {
         tiles.placeOnTile(mySprite, tiles.locationInDirection(tiles.locationOfSprite(mySprite), CollisionDirection.Top))
     }
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-	
+    if (!(Has_Flag(tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.column), tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.row)))) {
+        mySprite2 = sprites.create(img`
+            . . 2 2 b . . 
+            2 2 2 2 b . . 
+            . . . . b . . 
+            . . . . b . . 
+            . . . . b . . 
+            . c c c c c . 
+            c c c c c c c 
+            `, SpriteKind.Flag)
+        tiles.placeOnTile(mySprite2, tiles.locationOfSprite(mySprite))
+        mySprite2.z = 9
+        sprites.setDataNumber(mySprite2, "col", tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.column))
+        sprites.setDataNumber(mySprite2, "row", tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.row))
+    } else {
+        Desto_Flag(tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.column), tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.row))
+    }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     Desto_Neighbour(tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.column), tiles.locationXY(tiles.locationOfSprite(mySprite), tiles.XY.row))
@@ -154,13 +177,13 @@ function Cover () {
         tiles.placeOnTile(Covers, value)
         Covers.setFlag(SpriteFlag.GhostThroughTiles, true)
         Covers.setFlag(SpriteFlag.GhostThroughWalls, true)
-        Covers.setFlag(SpriteFlag.Invisible, true)
+        Covers.setFlag(SpriteFlag.Invisible, false)
         sprites.setDataNumber(Covers, "col", tiles.locationXY(value, tiles.XY.column))
         sprites.setDataNumber(Covers, "row", tiles.locationXY(value, tiles.XY.row))
     }
 }
 function Make_Bombs () {
-    for (let index = 0; index < 30; index++) {
+    for (let index = 0; index < 29; index++) {
         tiles.setTileAt(tiles.getTilesByType(assets.tile`myTile0`)._pickRandom(), assets.tile`myTile1`)
     }
     Makee_Numbers()
@@ -170,6 +193,16 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
         tiles.placeOnTile(mySprite, tiles.locationInDirection(tiles.locationOfSprite(mySprite), CollisionDirection.Bottom))
     }
 })
+function Has_Flag (num: number, num2: number) {
+    for (let value of sprites.allOfKind(SpriteKind.Flag)) {
+        if (sprites.readDataNumber(value, "col") == num && sprites.readDataNumber(value, "row") == num2) {
+            console.log("Flag Valid")
+            return true
+        }
+    }
+    console.log("Flag Non-Valid")
+    return false
+}
 function Valid_Tile (num: number, num2: number) {
     if (!(tiles.tileIs(tiles.getTileLocation(num, num2), assets.tile`myTile1`) || tiles.tileIs(tiles.getTileLocation(num, num2), assets.tile`myTile`))) {
         console.log("Tile Valid")
@@ -190,7 +223,7 @@ function Valid_Cover (num: number, num2: number) {
 }
 function Desto_Neighbour (num: number, num2: number) {
     Lolac = tiles.getTileLocation(num, num2)
-    if (Valid_Cover(num, num2) && Valid_Tile(num, num2)) {
+    if (Valid_Cover(num, num2) && Valid_Tile(num, num2) && !(Has_Flag(num, num2))) {
         console.log("Looping...")
         Desto_Cover(num, num2)
         Desto_Neighbour(tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Left), tiles.XY.column), tiles.locationXY(tiles.locationInDirection(Lolac, CollisionDirection.Left), tiles.XY.row))
@@ -205,6 +238,7 @@ function Desto_Neighbour (num: number, num2: number) {
 }
 let Lolac: tiles.Location = null
 let Covers: Sprite = null
+let mySprite2: Sprite = null
 let Num: Sprite = null
 let Bombiers = 0
 let Numbers: Image[] = []
